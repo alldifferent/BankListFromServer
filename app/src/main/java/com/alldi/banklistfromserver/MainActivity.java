@@ -3,8 +3,10 @@ package com.alldi.banklistfromserver;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.alldi.banklistfromserver.databinding.ActivityMainBinding;
+import com.alldi.banklistfromserver.utils.ConnectServer;
 
 public class MainActivity extends BaseActivity {
 
@@ -21,7 +23,12 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void setupEvents() {
-
+        act.serverTestBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ConnectServer.getRequestInfoBank(mContext, null);
+            }
+        });
     }
 
     @Override
