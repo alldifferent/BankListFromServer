@@ -45,7 +45,14 @@ public class MainActivity extends BaseActivity {
                                     if (code == 200){
                                         Toast.makeText(mContext, "정상적으로 데이터를 가져왔습니다.", Toast.LENGTH_SHORT).show();
                                     }else {
-                                        Toast.makeText(mContext, "서버통신에 문제가 있습니다.", Toast.LENGTH_SHORT).show();
+//                                        서버에서 주는 에러메세지를 토스트로 출력
+                                        try {
+                                            String message = json.getString("message");
+                                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+
                                     }
                                 }
                             });
