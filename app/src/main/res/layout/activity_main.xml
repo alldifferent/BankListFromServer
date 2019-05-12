@@ -16,6 +16,14 @@
             android:text="서버 통신 테스트"
             />
 
+        <ListView
+            android:id="@+id/bankList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+        </ListView>
+
 
     </LinearLayout>
 
