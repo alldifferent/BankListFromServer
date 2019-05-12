@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.alldi.banklistfromserver.adapters.BankAdapter;
 import com.alldi.banklistfromserver.databinding.ActivityMainBinding;
 import com.alldi.banklistfromserver.datas.Bank;
 import com.alldi.banklistfromserver.utils.ConnectServer;
@@ -22,6 +23,7 @@ public class MainActivity extends BaseActivity {
 
     ActivityMainBinding act;
     List<Bank> bankList = new ArrayList<>();
+    BankAdapter bankAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class MainActivity extends BaseActivity {
                                                 bankList.add(bankObj);
 
                                             }
+                                            bankAdapter.notifyDataSetChanged();
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
@@ -97,6 +100,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void setValues() {
+
+        bankAdapter = new BankAdapter(mContext, bankList);
+        act.bankList.setAdapter(bankAdapter);
 
     }
 
