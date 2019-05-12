@@ -40,59 +40,7 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 
-                ConnectServer.getRequestInfoBank(mContext, new ConnectServer.JsonResponseHandler() {
-                    @Override
-                    public void onResponse(JSONObject json) {
-//                        실제로 서버에서 돌아온 응답을 메인 액티비티에서 처리하는 메쏘드.
 
-                        try {
-                            int code = json.getInt("code");
-
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (code == 200){
-                                        Toast.makeText(mContext, "정상적으로 데이터를 가져왔습니다.", Toast.LENGTH_SHORT).show();
-
-                                        try {
-                                            JSONObject data = json.getJSONObject("data");
-                                            JSONArray banks = data.getJSONArray("banks");
-
-                                            for (int i = 0; i < banks.length(); i++){
-                                                JSONObject bank = banks.getJSONObject(i);
-
-//                                                String name = bank.getString("name");
-//                                                Log.d("은행이름", name);
-
-                                                Bank bankObj = Bank.getBankFromJson(bank);
-                                                bankList.add(bankObj);
-
-                                            }
-                                            bankAdapter.notifyDataSetChanged();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }else {
-//                                        서버에서 주는 에러메세지를 토스트로 출력
-                                        try {
-                                            String message = json.getString("message");
-                                            Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                }
-                            });
-
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                });
                 
             }
         });
@@ -103,6 +51,71 @@ public class MainActivity extends BaseActivity {
 
         bankAdapter = new BankAdapter(mContext, bankList);
         act.bankList.setAdapter(bankAdapter);
+
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ConnectServer.getRequestInfoBank(mContext, new ConnectServer.JsonResponseHandler() {
+            @Override
+            public void onResponse(JSONObject json) {
+//                        실제로 서버에서 돌아온 응답을 메인 액티비티에서 처리하는 메쏘드.
+
+                try {
+                    int code = json.getInt("code");
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (code == 200){
+                                Toast.makeText(mContext, "정상적으로 데이터를 가져왔습니다.", Toast.LENGTH_SHORT).show();
+
+                                try {
+                                    JSONObject data = json.getJSONObject("data");
+                                    JSONArray banks = data.getJSONArray("banks");
+
+//                                    누적으로 데이터가 쌓이지 않게, 미리 한번 비워주는 코드.
+                                    bankList.clear();
+
+                                    for (int i = 0; i < banks.length(); i++){
+                                        JSONObject bank = banks.getJSONObject(i);
+
+//                                                String name = bank.getString("name");
+//                                                Log.d("은행이름", name);
+
+                                        Bank bankObj = Bank.getBankFromJson(bank);
+                                        bankList.add(bankObj);
+
+                                    }
+                                    bankAdapter.notifyDataSetChanged();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }else {
+//                                        서버에서 주는 에러메세지를 토스트로 출력
+                                try {
+                                    String message = json.getString("message");
+                                    Toast.makeText(mContext, message, Toast.LENGTH_SHORT).show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    });
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
 
     }
 
